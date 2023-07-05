@@ -64,7 +64,7 @@ public struct SecKeyPair {
       return Builder(type: type, keySize: keySize)
     }
 
-    public func generate(label: String? = nil, flags: Set<Flag> = []) throws -> SecKeyPair {
+    public func generate(label: String? = nil, tag: Data? = nil, flags: Set<Flag> = []) throws -> SecKeyPair {
       guard let type = type else { fatalError("missing key type") }
       guard let keySize = keySize else { fatalError("missing key size") }
 
@@ -75,6 +75,9 @@ public struct SecKeyPair {
 
       if let label = label {
         attrs[kSecAttrLabel] = label
+      }
+      if let tag = tag {
+        attrs[kSecAttrApplicationTag] = tag
       }
 
       if flags.contains(.secureEnclave) {

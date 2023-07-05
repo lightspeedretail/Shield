@@ -21,8 +21,8 @@ class SecKeyPairTests: XCTestCase {
   override func setUpWithError() throws {
     try super.setUpWithError()
 
-    rsaKeyPair = try SecKeyPair.Builder(type: .rsa, keySize: 2048).generate(label: "Test RSA Key")
-    ecKeyPair = try SecKeyPair.Builder(type: .ec, keySize: 256).generate(label: "Test EC Key")
+    rsaKeyPair = try SecKeyPair.Builder(type: .rsa, keySize: 2048).generate(label: "Test RSA Key", tag: Data("Test RSA Key".utf8))
+    ecKeyPair = try SecKeyPair.Builder(type: .ec, keySize: 256).generate(label: "Test EC Key", tag: Data("Test EC Key".utf8))
   }
 
   override func tearDownWithError() throws {
