@@ -77,7 +77,7 @@ public struct SecKeyPair {
         attrs[kSecAttrLabel] = label
       }
       if let tag = tag {
-        attrs[kSecAttrApplicationTag] = tag as CFData
+        attrs[kSecAttrApplicationTag] = tag
       }
 
       if flags.contains(.secureEnclave) {
