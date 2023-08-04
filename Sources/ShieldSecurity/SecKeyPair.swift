@@ -68,16 +68,28 @@ public struct SecKeyPair {
       guard let type = type else { fatalError("missing key type") }
       guard let keySize = keySize else { fatalError("missing key size") }
 
+      var privateKeyAttrs: [CFString: Any] = [
+        kSecAttrIsPermanent: true,
+      ]
+
+      var publicKeyAttrs: [CFString: Any] = [
+        kSecAttrIsPermanent: true,
+      ]
+
+      if let tag = tag {
+          privateKeyAttrs[kSecAttrApplicationTag] = tag
+          publicKeyAttrs[kSecAttrApplicationTag] = tag
+      }
+
       var attrs: [CFString: Any] = [
         kSecAttrKeyType: type.systemValue,
         kSecAttrKeySizeInBits: keySize,
+        kSecPrivateKeyAttrs: privateKeyAttrs,
+        kSecPublicKeyAttrs: publicKeyAttrs,
       ]
 
       if let label = label {
         attrs[kSecAttrLabel] = label
-      }
-      if let tag = tag {
-        attrs[kSecAttrApplicationTag] = tag
       }
 
       if flags.contains(.secureEnclave) {
