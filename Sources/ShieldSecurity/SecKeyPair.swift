@@ -73,16 +73,22 @@ public struct SecKeyPair {
         kSecAttrKeySizeInBits: keySize,
       ]
 
+      var doSave = true
       if let tag = tag {
         let privateKeyAttrs: [CFString: Any] = [
-          kSecAttrApplicationTag: tag
+          kSecAttrApplicationTag: tag,
+          kSecAttrIsPermanent: true,
         ]
         let publicKeyAttrs: [CFString: Any] = [
-          kSecAttrApplicationTag: tag
+          kSecAttrApplicationTag: tag,
+          kSecAttrIsPermanent: true,
         ]
 
         attrs[kSecPrivateKeyAttrs] = privateKeyAttrs
         attrs[kSecPublicKeyAttrs] = publicKeyAttrs
+
+        // The private/public keys are already permanent, no need to save them
+        doSave = false
       }
 
       if let label = label {
@@ -101,15 +107,17 @@ public struct SecKeyPair {
 
       #if os(iOS) || os(watchOS) || os(tvOS)
 
-        if !flags.contains(.secureEnclave) {
+        if !flags.contains(.secureEnclave) && doSave {
           try privateKey!.save()
         }
 
-        try publicKey!.save()
+        if doSave {
+          try publicKey!.save()
+        }
 
       #elseif os(macOS)
 
-        if flags.contains(.secureEnclave) {
+        if flags.contains(.secureEnclave) && doSave {
           try publicKey!.save()
         }
 
