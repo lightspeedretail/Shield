@@ -158,11 +158,14 @@ public extension SecKey {
 
     let attrs = try attributes()
 
-    let query: [String: Any] = [
+    var query: [String: Any] = [
       kSecClass as String: kSecClassKey,
       kSecAttrKeyClass as String: attrs[kSecAttrKeyClass as String]!,
       kSecValueRef as String: self,
     ]
+    if let label = attrs[kSecAttrLabel as String] {
+      query[kSecAttrLabel as String] = label
+    }
 
     let status = SecItemAdd(query as CFDictionary, nil)
 
